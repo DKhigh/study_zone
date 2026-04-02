@@ -1,6 +1,7 @@
 ﻿#include <stdio.h>
+#include <string.h>
 #define MAX_SIZE 100
-typedef int element;
+typedef char element;
 
 typedef struct stack {
     element arr[MAX_SIZE];
@@ -29,15 +30,60 @@ void push(Stack *s, element value) {
 
 element pop(Stack *s) {
     if(is_empty(s)) {
-        printf("stack is empty");
+        printf("stack is empty\n");
+        return (element)0;
+    }
+    return (s->arr[(s->top)--]);
+}
+
+int check_matching(Stack *s, char arr[]) {
+    element temp;
+    for(int i = 0; i < strlen(arr); i++) {
+        switch(arr[i]) {
+            case '(': case '{': case '[':
+                push(s, arr[i]);
+                break;
+            case ')':
+                temp = pop(s);
+                if(temp != '(') {
+                    return 0;
+                }
+                break;
+            case '}':
+                temp = pop(s);
+                if(temp != '{') {
+                    return 0;
+                }
+                break;
+            case ']':
+                temp = pop(s);
+                if(temp != '[') {
+                    return 0;
+                }
+                break;
+        }
+    }
+    if(!is_empty(s)) {
         return 0;
     }
-    return (s->arr[(s->top)--])
+    return 1;
 }
 
 int main() {
 
-    
-    
+    Stack stack;
+    Stack *s = &stack;
+    init(s);
+
+    char input[MAX_SIZE];
+    scanf("%s", input);
+
+    if(check_matching(s, input)) {
+        printf("success\n");
+    }
+    else {
+        printf("false\n");
+    }
+
     return 0;
 }
